@@ -1,0 +1,1335 @@
+#########################################################################
+#         $$\      $$\  $$$$$$\   $$$$$$\  $$\   $$\                    #
+#         $$$\    $$$ |$$$ __$$\ $$$ __$$\ $$$\  $$ |                   #
+#         $$$$\  $$$$ |$$$$\ $$ |$$$$\ $$ |$$$$\ $$ |                   #
+#         $$\$$\$$ $$ |$$\$$\$$ |$$\$$\$$ |$$ $$\$$ |                   #
+#         $$ \$$$  $$ |$$ \$$$$ |$$ \$$$$ |$$ \$$$$ |                   #
+#         $$ |\$  /$$ |$$ |\$$$ |$$ |\$$$ |$$ |\$$$ |                   #
+#         $$ | \_/ $$ |\$$$$$$  /\$$$$$$  /$$ | \$$ |                   #
+#         \__|     \__| \______/  \______/ \__|  \__|                   #
+#                                                                       #
+#########################################################################
+#                      >>        M00N       <<                          #
+#      >>  MLMP & Shadow <|> Stream Kali ISO Recipe  <<                 #
+#                      >> Moonlight Edition <<                          #
+#########################################################################
+
+## Description: 
+# HomeGrown Kali ISO with i3wm tiled desktop
+# All controlable via keyboard <- DeadMouseEdition
+# Highly recommended for cmdline kungfu freaks & CherryMX lovers
+
+
+## Author:
+# MLMP , Shadow Stream (Scorpioni4e)
+
+## Ingredients: 
+# Kali box (VM OK)	x1
+# Internet connection	x1
+# Time			Some
+# Coffee/Donuts		Enough 
+
+## PreparationTime:
+# 20 min
+
+## CookingTime:
+# Lite > 30min+
+# Phat > 1h+
+# >> depending how much stuff (tools) you put inside and the power of your oven.
+
+## Out-Of-Box Features:
+# I3wm Desktop (minimal interface - created for VM)
+# Loads of keyboard controls >> KillThatMouse!!
+# Selection of top "RedTeam" tools (Phat>50|Lite>10) >> can be adjusted to your needs
+# Powershell included
+# Hyper-V screen resolution settings (yes, I use hyperV. You don't have to...)
+# AutoBoot ZeroTouch >> Great for lab
+# Dark theme / custom art
+# Should be used as a template for own recipe - all steps are optional/tweakable
+# ISO Size:	1.5GB without any tools 
+		3.0GB with kali-full
+
+## Video: 
+# L33tR4t DeadMouseEdition - Quick Preview
+# https://youtu.be/v9zTgPthh2g
+# L33tR4t_DME - Cooking a Dead Mouse with Sadprocessor (musical walktrough)
+# https://youtu.be/QcwvPPV0yo8
+
+## Useful resources:
+# BHUSA - Kali Dojo - WorkShop #1 - Rolling Your Own...
+# https://youtu.be/mblbt02MSmE
+# 
+# i3wm tweak tutorial (3part)
+# https://youtu.be/j1I63wGcvU4
+# https://youtu.be/8-S0cWnLBKg
+# https://youtu.be/ARKIwOlazKI
+# 
+# i3wm reference << if you want to customize it some more
+# https://i3wm.org/docs/userguide.html
+
+
+## Notes:
+
+# Changed to xfce base for smaller iso footprint (=better for PXE) 
+
+# Not to be run as script >> use THE tool (=CopyPaste)
+
+# Not that exiting to do, but it's quick, and the result is well worth it imo. Hope you like it.
+
+# :)
+
+##
+
+
+###########################
+##### START-o-RECIPE ######
+###########################
+
+
+### PrepSystem
+## Full updated system
+apt-get update
+apt-get upgrade -y
+
+## Get LiveBuild Stuff
+apt-get install live-build cdebootstrap -y
+
+## set build folder location << adjust to your needs
+#<---copy
+lb=~/
+# kali-config folder location
+kc=$lb/live-build-config/kali-config
+
+# Get Templates from kali.org
+cd $lb
+git clone git://git.kali.org/live-build-config.git
+#<---paste
+
+## Create Folder structure
+#<---copy
+cd $kc
+rm -R *e17 *i3wm *kde *lxde *mate *xfce
+mkdir $kc/tmp/
+mkdir -p $kc/common/includes.chroot/etc/default/
+mkdir -p $kc/common/includes.chroot/root/.config/gtk-2.0/
+mkdir -p $kc/common/includes.chroot/root/.config/gtk-3.0/
+mkdir -p $kc/common/includes.chroot/root/.config/i3/
+mkdir -p $kc/common/includes.chroot/root/.config/leafpad/
+mkdir -p $kc/common/includes.chroot/root/.config/libfm/
+mkdir -p $kc/common/includes.chroot/root/.config/pcmanfm/default/
+mkdir -p $kc/common/includes.chroot/root/.config/xfce4/terminal/
+mkdir -p $kc/common/includes.chroot/root/.fonts/
+mkdir -p $kc/common/includes.chroot/root/Desktop/
+mkdir -p $kc/common/includes.chroot/root/Pictures/wallpapers/
+mkdir -p $kc/common/includes.chroot/usr/share/images/desktop-base
+mkdir -p $kc/common/includes.chroot/usr/share/icons
+mkdir -p $kc/common/includes.chroot/usr/share/applications
+mkdir -p $kc/common/includes.chroot/usr/share/appXtraIcon
+mkdir $kc/common/packages/
+#<---paste
+
+## Download Fonts and Pics
+# Fonts
+#<---copy
+cd $kc/tmp/
+#YosemiteSanFranciscoSystem << Github
+wget https://github.com/supermarin/YosemiteSanFranciscoFont/archive/master.zip
+unzip master.zip
+cp YosemiteSanFranciscoFont-master/*.ttf $kc/common/includes.chroot/root/.fonts/
+
+#FontAwesome << Github
+wget https://github.com/FortAwesome/Font-Awesome/archive/v4.6.3.zip
+unzip v4.6.3.zip
+cp Font-Awesome-4.6.3/fonts/*.ttf $kc/common/includes.chroot/root/.fonts/
+#<---paste
+
+# Download nouveGnomeGray from Deviant art		<<<< ToDoByHand
+# http://www.deviantart.com/art/nouveGnomeGray-300365158
+# unzip and put in tmp
+
+# Download images folder from google drive 		<<<< ToDoByHand
+# https://drive.google.com/file/d/0B0HhVvXdwO1eQWFJdHJveFhRNGM/view			
+# unzip and put img folder in tmp
+
+# put all in the right place 
+#<---copy
+# move icons to shared icon folder
+mv nouveGnomeGray/ $kc/common/includes.chroot/usr/share/icons/
+
+# copy KaliGnome wallArt
+cp $kc/tmp/img/desktop/*.png $kc/common/includes.chroot/usr/share/images/desktop-base/
+
+# copy KaliI3 wallArt to Pictures/wallpapers
+cp $kc/tmp/img/i3/*.jpg  $kc/common/includes.chroot/root/Pictures/wallpapers/
+#include lock
+
+# copy (overwrite) splash.png to isolinux folder
+cp $kc/tmp/img/splash/splash.png $kc/common/includes.binary/isolinux/
+
+# copy app icons to appXtraIcon folder
+cp $kc/tmp/img/appIcons/*.png $kc/common/includes.chroot/usr/share/appXtraIcon/
+
+# copy (overwrite) warning icons in nouveGnomeGray folders
+cp $kc/tmp/img/warning/16x16/skull16.png $kc/common/includes.chroot/usr/share/icons/nouveGnomeGray/16x16/status/dialog-warning.png
+cp $kc/tmp/img/warning/22x22/skull22.png $kc/common/includes.chroot/usr/share/icons/nouveGnomeGray/22x22/status/dialog-warning.png
+cp $kc/tmp/img/warning/24x24/skull24.png $kc/common/includes.chroot/usr/share/icons/nouveGnomeGray/24x24/status/dialog-warning.png
+cp $kc/tmp/img/warning/32x32/skull32.png $kc/common/includes.chroot/usr/share/icons/nouveGnomeGray/32x32/status/dialog-warning.png
+cp $kc/tmp/img/warning/48x48/skull48.png $kc/common/includes.chroot/usr/share/icons/nouveGnomeGray/48x48/status/dialog-warning.png
+cp $kc/tmp/img/warning/128x128/skull128.png $kc/common/includes.chroot/usr/share/icons/nouveGnomeGray/128x128/status/dialog-warning.png
+#<---paste
+
+
+## Delete tmp folder
+cd $kc; rm -R tmp/
+
+ 
+
+### ToolList
+# Replace ToolLists for variant-light
+#<---copy
+cd $kc/variant-light/package-lists/
+cat > kali.list.chroot << EOF 
+### ToolList Custom Kali###
+
+## Base System
+kali-linux
+kali-desktop-live
+kali-desktop-xfce
+kali-desktop-gnome
+
+## I3wm
+kali-desktop-common
+xorg
+i3
+dmenu
+conky
+feh
+lxappearance
+compton
+i3blocks
+imagemagick
+scrot
+pcmanfm
+unclutter
+
+## Applications
+firefox-esr
+leafpad
+#keepnote
+#magictree
+
+## Kali Applications
+#aircrack-ng
+#arduino
+#armitage
+#backdoor-factory
+#beef-xss
+#burpsuite
+#commix
+#dirbuster
+#dnsrecon
+#dns2tcp
+#dotdotpwn
+#fierce
+#framework2
+#fruitywifi
+#hydra
+#john
+#john-data
+#johnny
+#king-phisher
+#maltego
+#masscan
+#metasploit-framework
+#mimikatz
+#msfpc
+#nikto
+#nishang
+#nmap
+#patator
+#powersploit
+#proxystrike
+#python-capstone
+#python-faraday
+#recon-ng
+#responder
+#seclists
+#set
+#shellter
+#sparta
+#sqlmap
+#sqlninja
+#theharvester
+#uniscan
+#veil-evasion
+#veil-catapult
+#wafw00f
+#weevely
+#webshells
+#wireshark
+#wordlists
+#wpscan
+#xsser
+#zaproxy
+#zenmap
+
+## you can add any kali tools to this list (anything you could apt-get)
+## check with 'apt-cache search xxxx' for exact spelling
+
+## or use pre-made application bundles
+kali-linux-full
+#kali-linux-all
+#kali-linux-sdr
+#kali-linux-gpu
+#kali-linux-wireless
+#kali-linux-web
+#kali-linux-forensic
+#kali-linux-voip
+#kali-linux-pwtools
+#kali-linux-top10
+#kali-linux-rfid
+##>> see kali.org for bundle content
+
+## Prereq for PowerShell
+libunwind8
+libicu55
+
+## Prereq for Empire
+python-openssl
+
+# 32bit shared lib for 64bit systems
+libc6-i386
+
+EOF
+
+# copy same list in variant-gnome (Phat) 
+cp kali.list.chroot $kc/variant-gnome/package-lists/kali.list.chroot
+#<---paste
+# uncomment tools you want in lite/phat flavor		<<< ToDoByHand
+
+### Pack_PowerShell
+#<---copy
+cd $kc/common/packages/
+wget https://github.com/PowerShell/PowerShell/releases/download/v6.0.0-alpha.10/powershell_6.0.0-alpha.10-1ubuntu1.16.04.1_amd64.deb
+#<---paste
+# /!\ # Thats it. No dpkg needed (all auto during build)
+# >>>>> Add more .deb in there if you need <<
+# note: Nessus doesn't seem to auto install properly that way
+
+### Launcher_Powershell
+#<---copy
+cd $kc/common/includes.chroot/usr/share/applications/
+cat > powershell.desktop << EOF
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=powershell
+Encoding=UTF-8
+Exec=sh -c "powershell;\${SHELL:-bash}"
+Icon=/usr/share/appXtraIcon/powershellLogo.png
+StartupNotify=false
+Terminal=true
+Type=Application
+Categories=SYSTEM;
+EOF
+#<---paste
+## need to double click link once & trust	  	<<< ToDoByHand
+
+### Preseed_ZeroTouch
+#<---copy
+# Replace preseed with ZeroTouch AnswerFile
+cd $kc/common/includes.installer/
+cat > preseed.cfg << EOF
+# This preseed files will ZeroTouch Install Kali Linux.
+# (adjust values to suite your needs)
+
+#Settings stuff
+d-i debian-installer/language en
+d-i debian-installer/country NL
+d-i debian-installer/locale string en_US.UTF-8 
+d-i console-keymaps-at/keymap select en_US
+d-i keyboard-configuration/xkb-keymap select us
+
+#mirror stuff
+d-i mirror/country string Netherlands
+d-i mirror/suite string kali
+#d-i mirror/codename kali
+d-i mirror/http/hostname string archive.kali.org 
+d-i mirror/http/directory string /kali 
+d-i mirror/http/proxy string 
+
+#clock stuff
+d-i clock-setup/utc boolean true 
+d-i time/zone string Europe/Amsterdam 
+d-i clock-setup/ntp boolean true
+
+#APT Stuff
+# Disable volatile and security 
+d-i apt-setup/services-select multiselect
+# Enable contrib and non-free
+d-i apt-setup/non-free boolean true 
+d-i apt-setup/contrib boolean true 
+
+# Partitioning Stuff
+d-i partman-auto/method string regular 
+d-i partman-lvm/device_remove_lvm boolean true 
+d-i partman-md/device_remove_md boolean true 
+d-i partman-lvm/confirm boolean true 
+d-i partman-auto/choose_recipe select atomic 
+d-i partman/confirm_write_new_label boolean true 
+d-i partman/choose_partition select finish 
+d-i partman/confirm boolean true 
+d-i partman/confirm_nooverwrite boolean true
+
+# Own security mirror Stuff 
+d-i apt-setup/local0/repository string http://archive.kali.org/kali-security kali/updates main 
+d-i apt-setup/local0/comment string Security updates 
+d-i apt-setup/local0/source boolean true 
+d-i apt-setup/use_mirror boolean true
+
+# Tasksel for Upgrade Stuff
+tasksel tasksel/first multiselect standard 
+d-i pkgsel/upgrade select full-upgrade 
+
+# Tools Install Stuff 
+d-i pkgsel/include string openssh-server nano openvpn ntpupdate 
+
+# Hostname Stuff
+d-i netcfg/get_hostname string L33tR4t  
+d-i netcfg/get_domain string  
+d-i netcfg/hostname string kali # Do not create a normal user account 
+d-i passwd/make-user boolean false 
+d-i passwd/root-password password rat
+d-i passwd/root-password-again password rat
+
+# Popularity Stuff
+popularity-contest popularity-contest/participate boolean false 
+
+# Grub Stuff
+d-i ucf/changeprompt select install the package maintainer's version
+d-i grub-installer/only_debian boolean true 
+d-i grub-installer/with_other_os boolean false
+d-i grub-installer/bootdev string /dev/sda
+d-i finish-install/reboot_in_progress note
+
+# More Stuff
+kismet kismet/install-setuid boolean false
+kismet kismet/install-users string  
+
+sslh sslh/inetd_or_standalone select standalone
+
+# auth ssh root/pwd   <<< /!\ LabOnly
+#openssh-server openssh-server/permit-root-login boolean true
+# requires hook
+
+mysql-server-5.5 mysql-server/root_password_again password
+mysql-server-5.5 mysql-server/root_password password
+mysql-server-5.5 mysql-server/error_setting_password error
+mysql-server-5.5 mysql-server-5.5/postrm_remove_databases boolean false
+mysql-server-5.5 mysql-server-5.5/start_on_boot boolean true
+mysql-server-5.5 mysql-server-5.5/nis_warning note
+
+
+mysql-server-5.5 mysql-server-5.5/really_downgrade boolean false
+mysql-server-5.5 mysql-server/password_mismatch error
+mysql-server-5.5 mysql-server/no_upgrade_when_using_ndb error
+
+#late commands (/!\ error 127 >> need testing)
+#d-i preseed/late_command string /root/Desktop/myScript.sh
+
+EOF
+#<---paste
+
+### ISOlinux_ZeroTouch
+#<---copy
+cd $kc/common/includes.binary/isolinux/
+cat > install.cfg << EOF
+label ZeroTouch
+menu label ^ZeroTouch
+linux /install/vmlinuz
+initrd /install/initrd.gz
+append vga=788 -- quiet splash file=/cdrom/install/preseed.cfg locale=en_US keymap=us hostname=kali domain=local.lan
+
+EOF
+#
+cat > isolinux.cfg << EOF
+include menu.cfg
+ui vesamenu.c32
+default ZeroTouch
+prompt 1
+timeout 70
+
+EOF
+#<---paste
+
+### Grub (for HyperV screen resolution)
+#<---copy
+cd $kc/common/includes.chroot/etc/default
+cat > grub << EOF
+# If you change this file, run 'update-grub' afterwards to update
+# /boot/grub/grub.cfg.
+# For full documentation of the options in this file, see:
+#   info -f grub -n 'Simple configuration'
+
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR=Kali
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash video=hyperv_fb:1440x810"
+GRUB_CMDLINE_LINUX="initrd=/install/initrd.gz"
+
+# Uncomment to enable BadRAM filtering, modify to suit your needs
+# This works with Linux (no patch required) and with any kernel that obtains
+# the memory map information from GRUB (GNU Mach, kernel of FreeBSD ...)
+#GRUB_BADRAM="0x01234567,0xfefefefe,0x89abcdef,0xefefefef"
+
+# Uncomment to disable graphical terminal (grub-pc only)
+#GRUB_TERMINAL=console
+
+# The resolution used on graphical terminal
+# note that you can use only modes which your graphic card supports via VBE
+# you can see them in real GRUB with the command 'vbeinfo'
+#GRUB_GFXMODE=640x480
+
+# Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to Linux
+#GRUB_DISABLE_LINUX_UUID=true
+
+# Uncomment to disable generation of recovery mode menu entries
+#GRUB_DISABLE_RECOVERY="true"
+
+# Uncomment to get a beep at grub start
+#GRUB_INIT_TUNE="480 440 1"
+
+EOF
+#<---paste
+
+## .bashrc --> remove color prompt
+cd $kc/common/includes.chroot/root/
+leafpad .bashrc
+#<---copy
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    #alias grep='grep --color=auto'
+    #alias fgrep='fgrep --color=auto'
+    #alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+#alias ll='ls -l'
+#alias la='ls -A'
+#alias l='ls -CF'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+#<---paste+save
+
+### Config .gtkrc-2.0
+#<---copy
+cd $kc/common/includes.chroot/root/
+cat > .gtkrc-2.0 << EOF
+# DO NOT EDIT! This file will be overwritten by LXAppearance.
+# Any customization should be done in ~/.gtkrc-2.0.mine instead.
+
+include "/root/.gtkrc-2.0.mine"
+gtk-theme-name="Blackbird"
+gtk-icon-theme-name="nouveGnomeGray"
+gtk-font-name="Sans 9"
+gtk-cursor-theme-name="Adwaita"
+gtk-cursor-theme-size=24
+gtk-toolbar-style=GTK_TOOLBAR_TEXT
+gtk-toolbar-icon-size=GTK_ICON_SIZE_SMALL_TOOLBAR
+gtk-button-images=0
+gtk-menu-images=0
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=0
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle="hintfull"
+gtk-xft-rgba="none"
+gtk-modules="canberra-gtk-module"
+
+EOF
+#<---paste
+
+### gtk2 config
+#<---copy
+cd $kc/common/includes.chroot/root/.config/gtk-2.0/
+cat > gtkfilechooser.ini << EOF
+[Filechooser Settings]
+LocationMode=path-bar
+ShowHidden=false
+ShowSizeColumn=true
+GeometryX=546
+GeometryY=103
+GeometryWidth=606
+GeometryHeight=450
+SortColumn=name
+SortOrder=ascending
+StartupMode=recent
+
+EOF
+#<---paste
+
+### gtk3 config
+#<---copy
+cd $kc/common/includes.chroot/root/.config/gtk-3.0/
+cat > setting.ini << EOF
+[Settings]
+gtk-application-prefer-dark-theme=1
+gtk-theme-name=Blackbird
+gtk-icon-theme-name=nouveGnomeGray
+gtk-font-name=Sans 9
+gtk-cursor-theme-name=Adwaita
+gtk-cursor-theme-size=24
+gtk-toolbar-style=GTK_TOOLBAR_TEXT
+gtk-toolbar-icon-size=GTK_ICON_SIZE_SMALL_TOOLBAR
+gtk-button-images=0
+gtk-menu-images=0
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=0
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintfull
+gtk-xft-rgba=none
+gtk-modules=canberra-gtk-module
+
+EOF
+#<---paste
+
+## I3 config (+i3blocks for topbar)
+cd $kc/common/includes.chroot/root/.config/i3/
+leafpad config
+#<---copy
+# I3ConfigFile - L33tR4t_DME
+# It will not be overwritten, so edit it as you like.
+
+## CONTENT
+# System
+# Windows
+# Workspace
+# Application
+# Style
+# Bars
+
+### SYSTEM
+
+# Mod Key (choose 1=Alt|4=Win)
+#set $mod Mod1
+set $mod Mod4
+
+# Reload config
+bindsym $mod+Shift+c reload
+# Restart
+bindsym $mod+Shift+r restart
+
+# Screenlock
+bindsym $mod+Escape exec i3lock --color=333333
+
+# Exit
+bindsym $mod+Shift+e exec "i3-nagbar -t error -m ' Procrastinating?' -b 'Yep...' 'i3-msg exit'"
+# Exit faster
+bindsym $mod+End exec "i3-nagbar -t error -m '  All Done?!' -b 'Yep...' 'i3-msg exit'"
+#Emergency Exit (no nagBar)
+bindsym $mod+Shift+End exec i3-msg exit
+#Emergency ShutDown (rageQuit)
+bindsym $mod+mod1+End exec poweroff -h
+
+### WINDOWS
+
+# Open Terminal
+bindsym $mod+Return exec xfce4-terminal
+
+# kill focused window
+bindsym $mod+shift+q kill
+# kill quicker
+bindsym $mod+BackSpace kill
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+# also with arrow keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+# also arrow keys
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# Fullscreen
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# Select All
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+z focus child
+
+# resize windows (+mouse ok)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+## WORKSPACE
+
+# set workspace names (number will be striped)
+set $workspace1 "1☠. "
+set $workspace2 "2☠.. "
+set $workspace3 "3☠:. "
+set $workspace4 "4☠:: "
+set $workspace5 "5☠::. "
+set $workspace6 "6☠::: "
+set $workspace7 "7☠:::. "
+set $workspace8 "8☠:::: "
+set $workspace9 "9☠::::. "
+set $workspace10 "10☠::::: "
+
+# switch to workspace
+bindsym $mod+1 workspace $workspace1
+bindsym $mod+2 workspace $workspace2
+bindsym $mod+3 workspace $workspace3
+bindsym $mod+4 workspace $workspace4
+bindsym $mod+5 workspace $workspace5
+bindsym $mod+6 workspace $workspace6
+bindsym $mod+7 workspace $workspace7
+bindsym $mod+8 workspace $workspace8
+bindsym $mod+9 workspace $workspace9
+bindsym $mod+0 workspace $workspace10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $workspace1
+bindsym $mod+Shift+2 move container to workspace $workspace2
+bindsym $mod+Shift+3 move container to workspace $workspace3
+bindsym $mod+Shift+4 move container to workspace $workspace4
+bindsym $mod+Shift+5 move container to workspace $workspace5
+bindsym $mod+Shift+6 move container to workspace $workspace6
+bindsym $mod+Shift+7 move container to workspace $workspace7
+bindsym $mod+Shift+8 move container to workspace $workspace8
+bindsym $mod+Shift+9 move container to workspace $workspace9
+bindsym $mod+Shift+0 move container to workspace $workspace10
+
+# Prev/Next Workspace
+bindsym $mod+comma workspace prev
+bindsym $mod+period workspace next
+
+# LastVisited workspace
+bindsym $mod+question workspace back_and_forth
+bindsym $mod+Tab workspace back_and_forth
+
+# Auto back and forth using same key
+#workspace_auto_back_and_forth yes
+
+### APPLICATIONS
+
+# Launcher/search
+bindsym $mod+d exec --no-startup-id dmenu_run -sb '$bg-color' -nb '$bg-color' -sf '$text-color' -nf '$inactive-text-color'
+#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+Home exec xfce4-appfinder
+
+# QuickLaunch
+bindsym $mod+b exec firefox-esr
+bindsym $mod+n exec leafpad
+bindsym $mod+m exec pcmanfm
+bindsym $mod+Shift+a exec lxappearance
+bindsym $mod+equal exec gnome-calculator
+
+# ScreenShots
+bindsym $mod+minus exec scrot '%Y-%m-%d_$wx$h.png' --focused --exec 'mv $f /root/Pictures/'
+bindsym $mod+shift+minus exec scrot '%Y-%m-%d_$wx$h.png' --exec 'mv $f /root/Pictures/'
+bindsym $mod+p exec pcmanfm ~/Pictures
+
+### STYLE
+
+# Font for window titles. 
+# Also used by bar unless different font spec in bar {} block
+font pango:System San Fransisco Display 8
+
+# Fallback Font (if problems on specific displays)
+#font pango:DejaVu Sans Mono 8
+
+# ColorScheme
+set $bg-color            #333333
+set $inactive-bg-color   #333333
+set $text-color          #f3f4f5
+set $inactive-text-color #777777
+set $urgent-bg-color     #705050
+
+# window colors
+#                       border              background         text                 indicator
+client.focused          $bg-color           $bg-color          $text-color          $bg-color
+client.unfocused        $inactive-bg-color $inactive-bg-color $inactive-text-color $bg-color
+client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color $bg-color
+client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          $bg-color
+
+# Wallpaper
+exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/w10Hack.jpg
+
+# Fade Effect
+exec --no-startup-id compton -f -I 0.04 -O 0.04 -D 7
+
+# Remove Mouse Pointer (Moonlight)
+#exec --no-startup-id unclutter -idle 0.5 -root
+
+### BARS
+
+# TopBar
+bar {
+	id TopBar
+	position top
+	strip_workspace_numbers yes
+	font pango:System San Fransisco Display 9
+  	status_command i3blocks
+	workspace_buttons no 
+	colors {
+		background $bg-color
+	 	separator #757575
+		#                  border             background         text
+		focused_workspace  $bg-color          $bg-color          $text-color
+		inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+		urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+	}
+}
+
+
+# Bottom Bar
+bar {
+        id BottomBar
+        position bottom
+        strip_workspace_numbers yes
+	binding_mode_indicator no
+        font pango:System San Fransisco Display 14 
+        colors {
+                background $bg-color
+                separator #757575
+                #                  border             background         text
+                focused_workspace  $bg-color          $bg-color          $text-color
+                inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+                urgent_workspace   $urgent-bg-color   $inactive-bg-color $inactive-text-color
+        }
+}
+
+
+###EndConfig
+#<---paste+save
+
+### i3blocks.conf
+cd $kc/common/includes.chroot/etc/
+leafpad i3blocks.conf
+#<---copy
+# i3blocks config file
+#
+# Please see man i3blocks for a complete reference!
+# The man page is also hosted at http://vivien.github.io/i3blocks
+#
+# List of valid properties:
+#
+# align
+# color
+# command
+# full_text
+# instance
+# interval
+# label
+# min_width
+# name
+# separator
+# separator_block_width
+# short_text
+# signal
+# urgent
+
+# Global properties
+#
+# The top properties below are applied to every block, but can be overridden.
+# Each block command defaults to the script name to avoid boilerplate.
+
+command=/usr/share/i3blocks/$BLOCK_NAME
+separator_block_width=9
+markup=none
+color=#777777
+
+
+[iface]
+#label=
+#label= 
+label=@
+#instance=wlan0
+#color=#f3f4f5
+interval=5
+separator=false
+
+
+[time]
+label=
+#command=date '+%Y-%m-%d %H:%M:%S'
+command=date '+%H:%M:%S'
+interval=1
+separator=false
+#color=#f3f4f5
+#
+
+#[logo]
+#command=echo ""
+#command=echo ""
+#command=echo ""
+#separator=false
+
+#####
+
+# Volume indicator
+#
+# The first parameter sets the step (and units to display)
+# The second parameter overrides the mixer selection
+# See the script for details.
+#[volume]
+#label=VOL
+#label=♪
+#instance=Master
+#instance=PCM
+#interval=once
+#signal=10
+
+# Memory usage
+#
+# The type defaults to "mem" if the instance is not specified.
+#[memory]
+#label=MEM
+#separator=false
+#interval=30
+
+#[memory]
+#label=SWAP
+#instance=swap
+#separator=false
+#interval=30
+
+# Disk usage
+#
+# The directory defaults to $HOME if the instance is not specified.
+# The script may be called with a optional argument to set the alert
+# (defaults to 10 for 10%).
+#[disk]
+#label=
+#instance=/mnt/data
+#interval=10
+#separator=false
+
+# Network interface monitoring
+#
+# If the instance is not specified, use the interface used for default route.
+# The address can be forced to IPv4 or IPv6 with -4 or -6 switches.
+
+#[wifi]
+#instance=wlp3s0
+#interval=10
+#separator=false
+
+#[bandwidth]
+#instance=eth0
+#interval=5
+
+# CPU usage
+#
+# The script may be called with -w and -c switches to specify thresholds,
+# see the script for details.
+#[cpu_usage]
+#label=CPU
+#interval=10
+#min_width=CPU: 100.00%
+#separator=false
+
+#[load_average]
+#interval=10
+
+# Battery indicator
+#
+# The battery instance defaults to 0.
+#[battery]
+#label=BAT
+#label=⚡
+#instance=1
+#interval=30
+
+
+# Generic media player support
+#
+# This displays "ARTIST - SONG" if a music is playing.
+# Supported players are: spotify, vlc, audacious, xmms2, mplayer, and others.
+#[mediaplayer]
+#instance=spotify
+#interval=5
+#signal=10
+
+# OpenVPN support
+#
+# Support multiple VPN, with colors.
+#[openvpn]
+#interval=20
+
+# Temperature
+#
+# Support multiple chips, though lm-sensors.
+# The script may be called with -w and -c switches to specify thresholds,
+# see the script for details.
+#[temperature]
+#label=TEMP
+#interval=10
+
+# Key indicators
+#
+# Add the following bindings to i3 config file:
+#
+# bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+# bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks
+#[keyindicator]
+#instance=CAPS
+#interval=once
+#signal=11
+
+#[keyindicator]
+#instance=NUM
+#interval=once
+#signal=11
+
+#<---paste+save
+#-
+
+### Leafpad config
+#<---copy
+cd $kc/common/includes.chroot/root/.config/leafpad/
+cat > leafpadrc << EOF
+0.8.18.1
+383
+582
+Monospace 10
+1
+1
+0
+
+EOF
+#<---paste
+
+
+### PCmanFM config
+#<---copy
+cd $kc/common/includes.chroot/root/.config/pcmanfm/default/
+cat > pcmanfm.conf << EOF
+[config]
+bm_open_method=0
+
+[volume]
+mount_on_startup=1
+mount_removable=0
+autorun=1
+
+[ui]
+always_show_tabs=0
+max_tab_chars=32
+win_width=575
+win_height=582
+splitter_pos=95
+media_in_new_tab=0
+desktop_folder_new_win=0
+change_tab_on_drop=1
+close_on_unmount=1
+focus_previous=0
+side_pane_mode=places
+view_mode=list
+show_hidden=1
+sort=name;ascending;mingle;
+toolbar=navigation;
+show_statusbar=0
+pathbar_mode_buttons=0
+
+EOF
+#<---paste
+
+# Don'g give up , you're almost done...
+
+### Terminal config
+cd $kc/common/includes.chroot/root/.config/xfce4/terminal
+cat > terminalrc << EOF
+[Configuration]
+BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
+ColorCursor=#777777777777
+MiscAlwaysShowTabs=FALSE
+MiscBell=FALSE
+MiscBordersDefault=TRUE
+MiscCursorBlinks=FALSE
+MiscCursorShape=TERMINAL_CURSOR_SHAPE_BLOCK
+MiscDefaultGeometry=80x24
+MiscInheritGeometry=FALSE
+MiscMenubarDefault=FALSE
+MiscMouseAutohide=FALSE
+MiscToolbarDefault=FALSE
+MiscConfirmClose=TRUE
+MiscCycleTabs=TRUE
+MiscTabCloseButtons=TRUE
+MiscTabCloseMiddleClick=TRUE
+MiscTabPosition=GTK_POS_TOP
+MiscHighlightUrls=TRUE
+ScrollingBar=TERMINAL_SCROLLBAR_NONE
+TitleInitial=>_
+TitleMode=TERMINAL_TITLE_HIDE
+ColorForeground=#f3f3f4f4f5f5
+ColorBackground=#000000000000
+ColorPalette=#3f3f3f3f3f3f;#707050505050;#6060b4b48a8a;#dfdfafaf8f8f;#9a9ab8b8d7d7;#dcdc8c8cc3c3;#8c8cd0d0d3d3;#dcdcdcdcdcdc;#707090908080;#dcdca3a3a3a3;#7272d5d5a3a3;#f0f0dfdfafaf;#9494bfbff3f3;#ecec9393d3d3;#9393e0e0e3e3;#ffffffffffff
+FontName=Noto Mono 10
+
+EOF
+#<---paste
+
+### Libfm config
+#<---copy
+cd $kc/common/includes.chroot/root/.config/libfm/
+cat > libfm.conf << EOF
+# Configuration file for the libfm version 1.2.4.
+# Autogenerated file, don't edit, your changes will be overwritten.
+
+[config]
+single_click=0
+use_trash=1
+confirm_del=0
+confirm_trash=1
+advanced_mode=0
+si_unit=0
+force_startup_notify=1
+backup_as_hidden=1
+no_usb_trash=1
+no_child_non_expandable=1
+show_full_names=1
+only_user_templates=0
+template_run_app=0
+template_type_once=0
+auto_selection_delay=600
+drop_default_action=auto
+defer_content_test=0
+quick_exec=0
+show_internal_volumes=0
+terminal=x-terminal-emulator %s
+archiver=file-roller
+thumbnail_local=1
+thumbnail_max=2048
+smart_desktop_autodrop=0
+
+[ui]
+big_icon_size=32
+small_icon_size=20
+pane_icon_size=16
+thumbnail_size=64
+show_thumbnail=1
+shadow_hidden=1
+
+[places]
+places_home=1
+places_desktop=1
+places_root=1
+places_computer=0
+places_trash=1
+places_applications=0
+places_network=1
+places_unmounted=1
+
+EOF
+
+#<---paste
+
+### Set ReadMe
+#<---copy
+cd $kc/common/includes.chroot/root/Desktop
+cat > LastTouch.ReadMe << EOF
+# Welcome to L33tR4t DeadMouse edition.
+# Follow theses steps to finish L33tR4t install:
+# 1- Open firefox (this will create profile)
+# 2- Close firefox
+# 3- Run following in terminal
+
+#<
+# set i3 as default
+update-alternatives --install /usr/bin/x-session-manager x-session-manager /usr/bin/i3 80
+
+#set firefox homepage to bing (for the lol)
+echo 'user_pref("browser.startup.homepage", "http://www.bing.com");' >> /root/.mozilla/firefox/*.default/prefs.js
+
+# Remove ReadMe
+rm /root/Desktop/LastTouch.ReadMe
+
+# reboot
+reboot
+
+# Login and enjoy...
+#<
+EOF
+#<---paste
+
+### DONE! 
+##---------> ready to cook...
+
+############################
+######### Cooking ##########
+############################
+
+# Checks:
+# adjust toolList in variant-light & variant-gnome (light/full)
+# check all OK one last time before take-off
+# get coffee 
+
+# L33tR4t_DME light (35min+ without any tools)
+cd $lb/live-build-config
+./build.sh --distribution kali-rolling --variant light --arch amd64 --verbose
+
+# L33tR4t_DME full (1h++ depends on content)
+cd $lb/live-build-config
+./build.sh --distribution kali-rolling --variant gnome --arch amd64 --verbose
+
+# note: effective cooking time depends on uncommented ingredients in toolList (and on your oven)
+
+# When cooked, boot into new VM with ISO, open ReadMe and copy-paste cmds to terminal. Done.
+
+###########################
+##### # END-o-RECIPE # ####
+###########################
+
+
